@@ -1,12 +1,24 @@
 pipeline {
     agent any
-    
+    environment {
+        // Load SonarQube token from Jenkins credentials
+        SONAR_TOKEN = credentials('SONAR_TOKEN') // Matches the ID you set
+    }
+    stages {
+        stage('SonarQube Analysis') {
+            steps {
+                sh 'mvn sonar:sonar -Dsonar.token=$SONAR_TOKEN'
+            }
+        }
+    }
+}
     stages {
         stage('Build') {
             steps {
                 bat 'mvn -B -DskipTests clean package'
             }
         }
+        
 //         stage('Sonar-Report') {
 //             steps {
 //             sh 'mvn sonar:sonar \
